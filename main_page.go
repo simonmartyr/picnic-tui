@@ -142,7 +142,7 @@ func (m *MainPage) renderSearch(term string) {
 	}
 	App.Tview.QueueUpdateDraw(func() {
 		m.Articles.Clear()
-		m.Articles.SetTitle(fmt.Sprintf(" (A)rticles ([blue]term:[white] %s ) ", term))
+		m.Articles.SetTitle(fmt.Sprintf(" (A)rticles ([orange]term:[white] %s ) ", term))
 		for _, srs := range *data {
 			for _, art := range srs.Items {
 				if art.Type != "SINGLE_ARTICLE" {
@@ -279,7 +279,7 @@ func (m *MainPage) renderArticleInfo(art *picnic.ArticleDetails) {
 	m.ArticleInfo.Clear()
 	var articleText = ""
 	if art.GetPromotion() != "" {
-		articleText = fmt.Sprintf("[blue]Name:[white] %s\n[blue]Quantity:[white] %s\n[blue]Price:[white] %s\n[green]Promotion:[white] %s\n[blue]Description:[white] %s",
+		articleText = fmt.Sprintf("[orange]Name:[white] %s\n[orange]Quantity:[white] %s\n[orange]Price:[white] %s\n[green]Promotion:[white] %s\n[orange]Description:[white] %s",
 			art.Name,
 			art.UnitQuantity,
 			FormatIntToPrice(art.PriceInfo.Price),
@@ -287,7 +287,7 @@ func (m *MainPage) renderArticleInfo(art *picnic.ArticleDetails) {
 			art.Description.Main,
 		)
 	} else {
-		articleText = fmt.Sprintf("[blue]Name:[white] %s\n[blue]Quantity:[white] %s\n[blue]Price:[white] %s\n[blue]Description:[white] %s",
+		articleText = fmt.Sprintf("[orange]Name:[white] %s\n[orange]Quantity:[white] %s\n[orange]Price:[white] %s\n[orange]Description:[white] %s",
 			art.Name,
 			art.UnitQuantity,
 			FormatIntToPrice(art.PriceInfo.Price),

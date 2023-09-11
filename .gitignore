@@ -23,3 +23,6 @@ text.txt
 go.work
 .idea
 .env
+
+#other
+.DS_Store
