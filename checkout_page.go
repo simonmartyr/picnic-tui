@@ -166,38 +166,46 @@ func (c *CheckoutPage) renderBasket() {
 		ShowErrorPage(cartErr.Error())
 		return
 	}
+
 	App.Cart = cart
 	App.Tview.QueueUpdateDraw(func() {
-		ind := c.Basket.GetCurrentItem()
 		c.Basket.Clear()
-		for _, orderLines := range App.Cart.Items {
-			for _, article := range orderLines.Items {
-				var prefix = ""
-				switch {
-				case !article.IsAvailable():
-					prefix = "[red]"
-				case orderLines.IsOnPromotion():
-					prefix = "[green]"
-				}
-				basketItemText := fmt.Sprintf("%s%d: %s - %s", prefix, article.Quantity(), article.Name, FormatIntToPrice(orderLines.PriceIncludingPromotions()))
-				c.Basket.AddItem(basketItemText, article.Id, 0, nil)
-			}
+		c.populateBasketItemList()
+
+		deliveryTime := c.getSelectedDeliveryTime()
+
+		basketTitle := "(B)asket (" + FormatIntToPrice(App.Cart.TotalPrice)
+		if deliveryTime != "" {
+			basketTitle += " | " + deliveryTime
 		}
-		var deliveryTime = ""
-		for _, slot := range App.Cart.DeliverySlots {
-			if !slot.Selected {
-				continue
+		basketTitle += ")"
+		c.Basket.SetTitle(basketTitle)
+	})
+}
+
+func (c *CheckoutPage) populateBasketItemList() {
+	for _, orderLines := range App.Cart.Items {
+		for _, article := range orderLines.Items {
+			prefix := ""
+			switch {
+			case !article.IsAvailable():
+				prefix = "[red]"
+			case orderLines.IsOnPromotion():
+				prefix = "[green]"
 			}
+			basketItemText := fmt.Sprintf("%s%d: %s - %s", prefix, article.Quantity(), article.Name, FormatIntToPrice(orderLines.PriceIncludingPromotions()))
+			c.Basket.AddItem(basketItemText, article.Id, 0, nil)
+		}
+	}
+}
+
+func (c *CheckoutPage) getSelectedDeliveryTime() string {
+	for _, slot := range App.Cart.DeliverySlots {
+		if slot.Selected {
 			start, _ := time.Parse(time.RFC3339, slot.WindowStart)
 			end, _ := time.Parse(time.RFC3339, slot.WindowEnd)
-			deliveryTime = start.Format("Mon, 02 Jan") + " " + start.Format("15:04") + "-" + end.Format("15:04")
-			break
+			return start.Format("Mon, 02 Jan") + " " + start.Format("15:04") + "-" + end.Format("15:04")
 		}
-		if deliveryTime == "" {
-			c.Basket.SetTitle(" (B)asket (" + FormatIntToPrice(App.Cart.TotalPrice) + ")")
-			return
-		}
-		c.Basket.SetTitle(" (B)asket (" + FormatIntToPrice(App.Cart.TotalPrice) + " | " + deliveryTime + ")")
-		c.Basket.SetCurrentItem(ind)
-	})
+	}
+	return ""
 }

@@ -140,30 +140,25 @@ func (m *MainPage) renderSearch(term string) {
 		ShowErrorPage(searchErr.Error())
 		return
 	}
+
 	App.Tview.QueueUpdateDraw(func() {
 		m.Articles.Clear()
-		m.Articles.SetTitle(fmt.Sprintf(" (A)rticles ([orange]term:[white] %s ) ", term))
+		m.Articles.SetTitle(fmt.Sprintf("(A)rticles ([orange]term:[white] %s )", term))
+
 		for _, srs := range *data {
 			for _, art := range srs.Items {
 				if art.Type != "SINGLE_ARTICLE" {
 					continue
 				}
+
+				itemText := art.Name
 				if art.IsOnPromotion() {
-					itemText := fmt.Sprintf("[green]%s %s", art.Name, FormatIntToPrice(art.PriceIncludingPromotions()))
-					m.Articles.AddItem(
-						itemText,
-						art.Id,
-						0,
-						nil,
-					)
+					itemText += " [green]" + FormatIntToPrice(art.PriceIncludingPromotions())
 				} else {
-					m.Articles.AddItem(
-						art.Name+" "+FormatIntToPrice(art.DisplayPrice),
-						art.Id,
-						0,
-						nil,
-					)
+					itemText += " " + FormatIntToPrice(art.DisplayPrice)
 				}
+
+				m.Articles.AddItem(itemText, art.Id, 0, nil)
 			}
 		}
 	})
@@ -304,38 +299,46 @@ func (m *MainPage) renderBasket() {
 		ShowErrorPage(cartErr.Error())
 		return
 	}
+
 	App.Cart = cart
 	App.Tview.QueueUpdateDraw(func() {
-		ind := m.Basket.GetCurrentItem()
 		m.Basket.Clear()
-		for _, orderLines := range App.Cart.Items {
-			for _, article := range orderLines.Items {
-				var prefix = ""
-				switch {
-				case !article.IsAvailable():
-					prefix = "[red]"
-				case orderLines.IsOnPromotion():
-					prefix = "[green]"
-				}
-				basketItemText := fmt.Sprintf("%s%d: %s - %s", prefix, article.Quantity(), article.Name, FormatIntToPrice(orderLines.PriceIncludingPromotions()))
-				m.Basket.AddItem(basketItemText, article.Id, 0, nil)
-			}
+		m.populateBasketItemList()
+
+		deliveryTime := m.getSelectedDeliveryTime()
+
+		basketTitle := "(B)asket (" + FormatIntToPrice(App.Cart.TotalPrice)
+		if deliveryTime != "" {
+			basketTitle += " | " + deliveryTime
 		}
-		var deliveryTime = ""
-		for _, slot := range App.Cart.DeliverySlots {
-			if !slot.Selected {
-				continue
+		basketTitle += ")"
+		m.Basket.SetTitle(basketTitle)
+	})
+}
+
+func (m *MainPage) populateBasketItemList() {
+	for _, orderLines := range App.Cart.Items {
+		for _, article := range orderLines.Items {
+			prefix := ""
+			switch {
+			case !article.IsAvailable():
+				prefix = "[red]"
+			case orderLines.IsOnPromotion():
+				prefix = "[green]"
 			}
+			basketItemText := fmt.Sprintf("%s%d: %s - %s", prefix, article.Quantity(), article.Name, FormatIntToPrice(orderLines.PriceIncludingPromotions()))
+			m.Basket.AddItem(basketItemText, article.Id, 0, nil)
+		}
+	}
+}
+
+func (m *MainPage) getSelectedDeliveryTime() string {
+	for _, slot := range App.Cart.DeliverySlots {
+		if slot.Selected {
 			start, _ := time.Parse(time.RFC3339, slot.WindowStart)
 			end, _ := time.Parse(time.RFC3339, slot.WindowEnd)
-			deliveryTime = start.Format("Mon, 02 Jan") + " " + start.Format("15:04") + "-" + end.Format("15:04")
-			break
+			return start.Format("Mon, 02 Jan") + " " + start.Format("15:04") + "-" + end.Format("15:04")
 		}
-		if deliveryTime == "" {
-			m.Basket.SetTitle(" (B)asket (" + FormatIntToPrice(App.Cart.TotalPrice) + ")")
-			return
-		}
-		m.Basket.SetTitle(" (B)asket (" + FormatIntToPrice(App.Cart.TotalPrice) + " | " + deliveryTime + ")")
-		m.Basket.SetCurrentItem(ind)
-	})
+	}
+	return ""
 }
