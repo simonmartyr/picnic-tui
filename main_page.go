@@ -272,7 +272,7 @@ func (m *MainPage) renderArticleImage(art *picnic.ArticleDetails) {
 
 func (m *MainPage) renderArticleInfo(art *picnic.ArticleDetails) {
 	m.ArticleInfo.Clear()
-	var articleText = ""
+	var articleText string
 	if art.GetPromotion() != "" {
 		articleText = fmt.Sprintf("[orange]Name:[white] %s\n[orange]Quantity:[white] %s\n[orange]Price:[white] %s\n[green]Promotion:[white] %s\n[orange]Description:[white] %s",
 			art.Name,

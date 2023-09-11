@@ -84,7 +84,11 @@ func createCheckoutBasket() *tview.List {
 func (c *CheckoutPage) setupHotKeys(event *tcell.EventKey) *tcell.EventKey {
 	if event.Key() == tcell.KeyEscape {
 		if c.Checkout != nil {
-			App.Client.CancelCheckout(c.Checkout.OrderId)
+			err := App.Client.CancelCheckout(c.Checkout.OrderId)
+			if err != nil {
+				ShowErrorPage(err.Error())
+				return event
+			}
 		}
 		SwitchToMainPage()
 		return event
