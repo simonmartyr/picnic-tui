@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
-	"github.com/simonmartyr/picnic"
+	picnic "github.com/simonmartyr/picnic-api"
 	qrcode "github.com/skip2/go-qrcode"
 	"time"
 )

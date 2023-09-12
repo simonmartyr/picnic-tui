@@ -4,7 +4,7 @@ import (
 	"errors"
 	"flag"
 	"github.com/rivo/tview"
-	"github.com/simonmartyr/picnic"
+	picnic "github.com/simonmartyr/picnic-api"
 	"net/http"
 )
 
