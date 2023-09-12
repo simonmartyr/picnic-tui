@@ -11,6 +11,32 @@ An unofficial terminal interface for the online supermarket Picnic.
 - Browse and pick your delivery time.
 - Confirm and pay for order (via ideal link)
 
+## Running the app
+
+### Windows
+
+Download the 32 or 64 bit exe and via the cmd/powershell run:
+
+`./picnic-tui-win64.exe -t <your auth token>`
+
+alternately
+
+`./picnic-tui-win64.exe -u <your username> -p <your password>`
+
+`./picnic-tui-win64.exe -u <your username> -hp <your md7 hashed password>`
+
+### Linux / Mac
+
+Download the `picnic_tui_x32` or `picnic_tui_x64` for linux or `picnic_tui_mac` for mac and run via the commandline:
+
+`./picnic_tui_x64 -t <your auth token>`
+
+alternately
+
+`./picnic_tui_x64 -u <your username> -p <your password>`
+
+`./picnic_tui_x64 -u <your username> -hp <your md7 hashed password>`
+
 
 ## Keybindings 
 

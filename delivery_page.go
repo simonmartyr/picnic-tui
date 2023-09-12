@@ -31,7 +31,7 @@ func createDeliveryFlex() *tview.Flex {
 
 	deliveryFlex.
 		SetBorder(true).
-		SetTitle(" Choose Delivery Time (💚 green choice for your neighbourhood) ").
+		SetTitle(" Choose Delivery Time ([green]*[white] green choice for your neighbourhood) ").
 		SetBorderColor(tcell.ColorRed).
 		SetTitleAlign(tview.AlignLeft)
 
@@ -80,7 +80,7 @@ func (d *DeliveryPage) renderDeliverySlotsPage() {
 			var postFix = ""
 			var preFix = ""
 			if slot.Icon.PmlVersion != "" {
-				postFix = "💚"
+				postFix = "[green]*[white]"
 			}
 			if slot.Selected {
 				preFix = "[:red]"
