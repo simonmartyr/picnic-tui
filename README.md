@@ -42,22 +42,28 @@ alternately
 
 The demo above highlights most but here is a complete breakdown:
 
-| Location      | Operation                         | Binding                        |
-|---------------|-----------------------------------|--------------------------------|
-| Main page     | Refresh                           | <kbd>Ctrl</kbd> + <kbd>R</kbd> |
-| Main page     | Search (clear text)               | <kbd>Ctrl</kbd> + <kbd>S</kbd> |
-| Main Page     | Search                            | <kbd>S</kbd> or <kbd>/</kbd>   |
-| Main Page     | See more information on a product | <kbd>f</kbd>                   |
-| Main Page     | Add 1 Item                        | <kbd>Enter</kbd>               |
-| Main Page     | Add x Items                       | <kbd>0</kbd> - <kbd>9</kbd>    |
-| Main Page     | Remove 1 Item                     | <kbd>backspace</kbd>           |
-| Main Page     | Clear Basket                      | <kbd>Ctrl</kbd> + <kbd>K</kbd> |
-| Main Page     | Switch to Delivery Page           | <kbd>D</kbd>                   |
-| Main Page     | Switch to Checkout Page           | <kbd>C</kbd>                   |
-|               |                                   |                                |
-| Delivery Page | Return to Main Page               | <kbd>Esc</kbd>                 |
-| Delivery Page | Select Delivery Slot              | <kbd>Enter</kbd>               |
-|               |                                   |                                |
-| Checkout Page | Return to Main Page               | <kbd>Esc</kbd>                 |
-| Checkout Page | Being checkout process            | <kbd>c</kbd>                   |
-|               |                                   |                                |
+| Location              | Operation                         | Binding                        |
+|-----------------------|-----------------------------------|--------------------------------|
+| Global                | Vim Style Exit                    | <kbd>:</kbd> <kbd>q</kbd>      |
+|                       |                                   |                                |
+| Main page             | Refresh                           | <kbd>Ctrl</kbd> + <kbd>R</kbd> |
+| Main page             | Search (clear text)               | <kbd>Ctrl</kbd> + <kbd>S</kbd> |
+| Main Page             | Search                            | <kbd>S</kbd> or <kbd>/</kbd>   |
+| Main Page             | See more information on a product | <kbd>f</kbd>                   |
+| Main Page             | Add 1 Item                        | <kbd>Enter</kbd>               |
+| Main Page             | Add x Items                       | <kbd>0</kbd> - <kbd>9</kbd>    |
+| Main Page             | Remove 1 Item                     | <kbd>backspace</kbd>           |
+| Main Page             | Clear Basket                      | <kbd>Ctrl</kbd> + <kbd>K</kbd> |
+| Main Page             | Switch to Delivery Page           | <kbd>D</kbd>                   |
+| Main Page             | Switch to Checkout Page           | <kbd>C</kbd>                   |
+| Main Page             | Switch to Delivery Tracker Page   | <kbd>T</kbd>                   |
+|                       |                                   |                                |
+| Delivery Page         | Return to Main Page               | <kbd>Esc</kbd>                 |
+| Delivery Page         | Select Delivery Slot              | <kbd>Enter</kbd>               |
+|                       |                                   |                                |
+| Checkout Page         | Return to Main Page               | <kbd>Esc</kbd>                 |
+| Checkout Page         | Start checkout process            | <kbd>c</kbd>                   |
+|                       |                                   |                                |
+| Delivery Tracker Page | Return to Main Page               | <kbd>Esc</kbd>                 |
+| Delivery Tracker Page | Select Order                      | <kbd>Enter</kbd>               |
+| Delivery Tracker Page | Navigate                          | <kbd>Tab</kbd>                 |
