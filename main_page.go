@@ -5,6 +5,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	picnic "github.com/simonmartyr/picnic-api"
+	"strings"
 	"time"
 )
 
@@ -15,6 +16,7 @@ type MainPage struct {
 	ArticleInfo  *tview.TextView
 	ArticleImage *tview.Image
 	Flex         *tview.Flex
+	ShowBundles  bool
 }
 
 func ShowMainPage() {
@@ -36,7 +38,9 @@ func SwitchToMainPage() {
 }
 
 func newMainPage() *MainPage {
-	mainPage := &MainPage{}
+	mainPage := &MainPage{
+		ShowBundles: true,
+	}
 
 	mainPage.Search = createSearch()
 	mainPage.Basket = createBasket()
@@ -85,6 +89,7 @@ func createSearch() *tview.InputField {
 
 func createArticleList() *tview.List {
 	articleList := tview.NewList().
+		SetSelectedTextColor(HighlightColor).
 		SetSelectedFocusOnly(true)
 	articleList.ShowSecondaryText(false).
 		SetBorder(true).
@@ -96,6 +101,7 @@ func createArticleList() *tview.List {
 
 func createBasket() *tview.List {
 	basket := tview.NewList().
+		SetSelectedTextColor(HighlightColor).
 		SetSelectedFocusOnly(true)
 	basket.ShowSecondaryText(false).
 		SetBorder(true).
@@ -143,20 +149,28 @@ func (m *MainPage) renderSearch(term string) {
 
 	App.Tview.QueueUpdateDraw(func() {
 		m.Articles.Clear()
-		m.Articles.SetTitle(fmt.Sprintf("(A)rticles ([orange]term:[white] %s )", term))
+		m.Articles.SetTitle(fmt.Sprintf("(A)rticles ([orange]term:[white] %s | [orange]bonus:[white] %t)", term, m.ShowBundles))
 
 		for _, srs := range *data {
+			var previousItem = ""
 			for _, art := range srs.Items {
 				if art.Type != "SINGLE_ARTICLE" {
 					continue
 				}
+				if previousItem == art.Name && strings.Contains(art.UnitQuantity, "x") && !m.ShowBundles {
+					continue
+				}
 
 				itemText := art.Name
-				if art.IsOnPromotion() {
+				if art.IsOnPromotion() || (previousItem == art.Name && strings.Contains(art.UnitQuantity, "x")) {
 					itemText += " [green]" + FormatIntToPrice(art.PriceIncludingPromotions())
+					if previousItem == art.Name {
+						itemText += " [white:red] B "
+					}
 				} else {
 					itemText += " " + FormatIntToPrice(art.DisplayPrice)
 				}
+				previousItem = art.Name
 
 				m.Articles.AddItem(itemText, art.Id, 0, nil)
 			}
@@ -191,6 +205,11 @@ func (m *MainPage) setupHotKeys(event *tcell.EventKey) *tcell.EventKey {
 		ShowDeliveryPage()
 	case r == 'c' || r == 'C':
 		ShowCheckoutPage()
+	case r == 't' || r == 'T':
+		ShowDeliveryTrackPage()
+	case r == 'h' || r == 'H':
+		m.ShowBundles = !m.ShowBundles
+		go m.renderSearch(m.Search.GetText())
 	case r == 'f' || r == 'F':
 		var itemId = ""
 		if m.Articles.HasFocus() {

@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"flag"
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	picnic "github.com/simonmartyr/picnic-api"
 	"net/http"
@@ -13,24 +14,42 @@ var (
 )
 
 type PicnicTui struct {
-	Client *picnic.Client
-	Tview  *tview.Application
-	Pages  *tview.Pages
-	Main   *MainPage
-	Cart   *picnic.Order
+	Client       *picnic.Client
+	Tview        *tview.Application
+	Pages        *tview.Pages
+	Main         *MainPage
+	Cart         *picnic.Order
+	colonPressed bool
 }
 
 func Start() {
 	c, clientErr := configureClient()
 
+	theme := tview.Theme{
+		PrimitiveBackgroundColor:    tcell.ColorDefault,
+		ContrastBackgroundColor:     tcell.ColorDefault,
+		MoreContrastBackgroundColor: tcell.ColorDefault,
+		BorderColor:                 tcell.ColorDefault,
+		TitleColor:                  tcell.ColorDefault,
+		GraphicsColor:               tcell.ColorDefault,
+		PrimaryTextColor:            tcell.ColorDefault,
+		SecondaryTextColor:          tcell.ColorDefault,
+		TertiaryTextColor:           tcell.ColorDefault,
+		InverseTextColor:            tcell.ColorDefault,
+		ContrastSecondaryTextColor:  tcell.ColorDefault,
+	}
+	tview.Styles = theme
+
 	App = &PicnicTui{
-		Client: c,
-		Tview:  tview.NewApplication(),
-		Pages:  tview.NewPages(),
+		Client:       c,
+		Tview:        tview.NewApplication(),
+		Pages:        tview.NewPages(),
+		colonPressed: false,
 	}
 
-	//err := App.Client.Authenticate()
-	App.Tview.SetRoot(App.Pages, true).SetFocus(App.Pages)
+	App.Tview.SetRoot(App.Pages, true).
+		SetInputCapture(App.GlobalHotKeys).
+		SetFocus(App.Pages)
 
 	if clientErr == nil {
 		ShowWelcomePage()
@@ -41,6 +60,18 @@ func Start() {
 	if err := App.Tview.Run(); err != nil {
 		panic(err)
 	}
+}
+
+func (p *PicnicTui) GlobalHotKeys(event *tcell.EventKey) *tcell.EventKey {
+	switch k := event.Rune(); {
+	case k == ':':
+		p.colonPressed = true
+	case (k == 'q' || k == 'Q') && p.colonPressed:
+		p.Tview.Stop()
+	default:
+		p.colonPressed = false
+	}
+	return event
 }
 
 func configureClient() (*picnic.Client, error) {

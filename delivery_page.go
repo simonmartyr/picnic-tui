@@ -97,6 +97,7 @@ func (d *DeliveryPage) renderDeliverySlotsPage() {
 			if i == 0 || !day.Equal(previousDate) {
 				dayRef = tview.NewList().
 					ShowSecondaryText(false).
+					SetSelectedTextColor(HighlightColor).
 					SetHighlightFullLine(true)
 				dayRef.SetTitle(" " + date.Format("Mon, 02 Jan") + " ").
 					SetBorderColor(tcell.ColorRed).
