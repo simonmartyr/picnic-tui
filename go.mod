@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/gdamore/tcell/v2 v2.7.0
 	github.com/rivo/tview v0.0.0-20240122063236-8526c9fe1b54
-	github.com/simonmartyr/picnic-api v1.0.0
+	github.com/simonmartyr/picnic-api v1.2.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 )
 
