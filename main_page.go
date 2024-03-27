@@ -5,7 +5,6 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	picnic "github.com/simonmartyr/picnic-api"
-	"strings"
 	"time"
 )
 
@@ -151,23 +150,13 @@ func (m *MainPage) renderSearch(term string) {
 		m.Articles.Clear()
 		m.Articles.SetTitle(fmt.Sprintf("(A)rticles ([orange]term:[white] %s | [orange]bonus:[white] %t)", term, m.ShowBundles))
 
-		var previousItem = ""
 		for _, art := range data {
-			if previousItem == art.Name && strings.Contains(art.UnitQuantity, "x") && !m.ShowBundles {
-				continue
-			}
-
 			itemText := art.Name
-			if art.IsOnPromotion() || (previousItem == art.Name && strings.Contains(art.UnitQuantity, "x")) {
+			if art.IsOnPromotion() {
 				itemText += " [green]" + FormatIntToPrice(art.PriceIncludingPromotions())
-				if previousItem == art.Name {
-					itemText += " [white:red] B "
-				}
 			} else {
 				itemText += " " + FormatIntToPrice(art.DisplayPrice)
 			}
-			previousItem = art.Name
-
 			m.Articles.AddItem(itemText, art.Id, 0, nil)
 		}
 	})
