@@ -141,7 +141,7 @@ func (m *MainPage) performSearch(key tcell.Key) {
 }
 
 func (m *MainPage) renderSearch(term string) {
-	data, searchErr := App.Client.Search(term)
+	data, searchErr := App.Client.SearchArticles(term)
 	if searchErr != nil {
 		ShowErrorPage(searchErr.Error())
 		return
@@ -151,29 +151,24 @@ func (m *MainPage) renderSearch(term string) {
 		m.Articles.Clear()
 		m.Articles.SetTitle(fmt.Sprintf("(A)rticles ([orange]term:[white] %s | [orange]bonus:[white] %t)", term, m.ShowBundles))
 
-		for _, srs := range *data {
-			var previousItem = ""
-			for _, art := range srs.Items {
-				if art.Type != "SINGLE_ARTICLE" {
-					continue
-				}
-				if previousItem == art.Name && strings.Contains(art.UnitQuantity, "x") && !m.ShowBundles {
-					continue
-				}
-
-				itemText := art.Name
-				if art.IsOnPromotion() || (previousItem == art.Name && strings.Contains(art.UnitQuantity, "x")) {
-					itemText += " [green]" + FormatIntToPrice(art.PriceIncludingPromotions())
-					if previousItem == art.Name {
-						itemText += " [white:red] B "
-					}
-				} else {
-					itemText += " " + FormatIntToPrice(art.DisplayPrice)
-				}
-				previousItem = art.Name
-
-				m.Articles.AddItem(itemText, art.Id, 0, nil)
+		var previousItem = ""
+		for _, art := range data {
+			if previousItem == art.Name && strings.Contains(art.UnitQuantity, "x") && !m.ShowBundles {
+				continue
 			}
+
+			itemText := art.Name
+			if art.IsOnPromotion() || (previousItem == art.Name && strings.Contains(art.UnitQuantity, "x")) {
+				itemText += " [green]" + FormatIntToPrice(art.PriceIncludingPromotions())
+				if previousItem == art.Name {
+					itemText += " [white:red] B "
+				}
+			} else {
+				itemText += " " + FormatIntToPrice(art.DisplayPrice)
+			}
+			previousItem = art.Name
+
+			m.Articles.AddItem(itemText, art.Id, 0, nil)
 		}
 	})
 }
