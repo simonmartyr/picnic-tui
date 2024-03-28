@@ -23,7 +23,7 @@ alternately
 
 `./picnic-tui-win64.exe -u <your username> -p <your password>`
 
-`./picnic-tui-win64.exe -u <your username> -hp <your md7 hashed password>`
+`./picnic-tui-win64.exe -u <your username> -hp <your md5 hashed password>`
 
 ### Linux / Mac
 
@@ -35,7 +35,7 @@ alternately
 
 `./picnic_tui_x64 -u <your username> -p <your password>`
 
-`./picnic_tui_x64 -u <your username> -hp <your md7 hashed password>`
+`./picnic_tui_x64 -u <your username> -hp <your md5 hashed password>`
 
 
 ## Keybindings 
