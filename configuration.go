@@ -3,7 +3,7 @@ package main
 import "github.com/gdamore/tcell/v2"
 
 const (
-	Version           = "v1.1"
+	Version           = "v1.2.1"
 	WelcomeId         = "welcome_page"
 	MainId            = "main_page"
 	DeliveryId        = "delivery_page"
